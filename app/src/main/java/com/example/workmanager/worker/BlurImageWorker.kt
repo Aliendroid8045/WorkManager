@@ -17,16 +17,16 @@ class BlurImageWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, para
     override fun doWork(): Result {
         return try {
 
-            //access stored birds.png file when the downloadImageWorker is finished
-            //cacheDir is new specific to app and it will be access only by your app
+            //access stored birds.png file when the downloadImageWorker job is finished
+            //cacheDir is app specific  and it will be access only by your app
             val cacheFile = File(applicationContext.cacheDir, "birds.png")
             val picture = BitmapFactory.decodeFile(cacheFile.path)
             val output = blurDownloadImage(picture, applicationContext)
             if (cacheFile.exists()) {
-                //delete old birds.png so next time we can download new file
+                //delete old birds.png so next time we can download new file while run the app
                 cacheFile.delete()
             }
-            //use extension function to write blur image at app cache folder as birdsblur.png
+            //use extension function to write blur image at app cache folder with file name birdsblur.png
             File(applicationContext.cacheDir, "birdsblur.png").writeBitmap(
                 output,
                 Bitmap.CompressFormat.PNG,
@@ -51,7 +51,6 @@ private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, qual
 fun blurDownloadImage(bitmap: Bitmap, applicationContext: Context): Bitmap {
     lateinit var rsContext: RenderScript
     try {
-
         // Create the output bitmap
         val output = Bitmap.createBitmap(
             bitmap.width, bitmap.height, bitmap.config

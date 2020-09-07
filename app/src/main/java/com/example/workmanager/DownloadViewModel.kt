@@ -1,3 +1,5 @@
+package com.example.workmanager
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
@@ -12,19 +14,21 @@ import com.example.workmanager.worker.DownloadImageWorker
 class DownloadViewModel(application: Application) :
     AndroidViewModel(application) {
     val isDownloadImageFinished = MediatorLiveData<WorkInfo>()
-     val isBlurringImageDone = MediatorLiveData<WorkInfo>()
+    val isBlurringImageDone = MediatorLiveData<WorkInfo>()
 
     fun doImageDownload() {
         //First task to download image from server
-        val downloadImage = OneTimeWorkRequest.Builder(DownloadImageWorker::class.java)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-            )
-            .addTag("imageDownload")
-            .build()
+        //This is onetime request
+        val downloadImage =
+            OneTimeWorkRequest.Builder(DownloadImageWorker::class.java)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiresBatteryNotLow(true)
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .addTag("imageDownload")
+                .build()
 
         //Second task to blur the image which downloaded from internet
         val blurImage = OneTimeWorkRequest.Builder(BlurImageWorker::class.java)
@@ -41,8 +45,8 @@ class DownloadViewModel(application: Application) :
             .beginWith(downloadImage)//Start downloading image-> once it finished, go for blur work
             .then(blurImage) // this task will wait until image is downloaded from server
             .enqueue()
+        //update the status of jobs using MediatorLieData.
         downloadImageStatus(downloadImage)
-
         blurWorkingStatus(blurImage)
 
     }

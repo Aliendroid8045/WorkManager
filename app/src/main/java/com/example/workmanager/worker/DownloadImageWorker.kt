@@ -21,9 +21,9 @@ class DownloadImageWorker(context: Context, workerParams: WorkerParameters) :
             .url(KEY_URL)
             .build()
 
-        //create a cache file inside app storage with name birds.png
         val directory = applicationContext.cacheDir
-        //create file in cache director of app
+        //access file in cache director of app with name birds.png
+        //more detail at "https://developer.android.com/training/data-storage/app-specific"
         val downloadedImage = File(directory, "birds.png")
         try {
             if (downloadedImage.exists()) {
@@ -45,11 +45,8 @@ class DownloadImageWorker(context: Context, workerParams: WorkerParameters) :
         return Result.success()
     }
 
-
     companion object {
         const val KEY_URL =
             "https://res.cloudinary.com/dhwzrlqbd/image/upload/v1599424209/workManager/birds.jpg"
     }
-
-
 }
