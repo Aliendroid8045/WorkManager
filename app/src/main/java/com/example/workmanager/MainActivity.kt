@@ -10,20 +10,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
-    val viewModel: DownloadViewModel by viewModels()
+   private val viewModel: DownloadViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        progress_circular.visibility = View.VISIBLE
+        lottie_material_progress.visibility = View.VISIBLE
         Toast.makeText(this, "We are downloading image using WorkManager", Toast.LENGTH_LONG).show()
 
         viewModel.doImageDownload()
-
         observeImageDownload()
-
         observeBlurImage()
     }
 
@@ -32,7 +29,6 @@ class MainActivity : AppCompatActivity() {
             if (blurStatus != null && blurStatus.state.isFinished) {
                 getBitmapFromCacheAndDisplay(true)
                 Toast.makeText(this, "blur applied", Toast.LENGTH_LONG).show()
-
             }
         }
     }
@@ -50,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val filename = if (isBlurred) "birdsblur.png" else "birds.png"
         val cacheFile = File(applicationContext.cacheDir, filename)
         val picture = BitmapFactory.decodeFile(cacheFile.path)
-        progress_circular.visibility = View.GONE
+        lottie_material_progress.visibility = View.GONE
         iv_download.visibility = View.VISIBLE
         iv_download.setImageBitmap(picture)
     }
